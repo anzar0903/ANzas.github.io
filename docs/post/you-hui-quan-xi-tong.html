@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="问题抛出
+在近期的项目里面有一个功能是领取优惠券的功能，
+
+问题描述：
+
+每一个优惠券一共发行多少张，每个用户可以领取多少张：
+
+如：A优惠券一共发行120张，每一个用户可以领取140张，当一个用户领取优惠券成功的时候，把领取的记录写入到另外一个表中(这张表我们暂且称为表B)
+
+
+
+
+
+<!--减优惠券库存的SQL-->
+<update id='reduceStock'>
+     update coupon set stock = stock - 1 where id = #{coupon_id}
+</update>
+上面的代码按照我们的逻辑是没有问题，我通过使用PostMan软件测试也是没有问题，但是上面的代码确实是有问题的。">
+<meta property="og:title" content="优惠券系统">
+<meta property="og:description" content="问题抛出
+在近期的项目里面有一个功能是领取优惠券的功能，
+
+问题描述：
+
+每一个优惠券一共发行多少张，每个用户可以领取多少张：
+
+如：A优惠券一共发行120张，每一个用户可以领取140张，当一个用户领取优惠券成功的时候，把领取的记录写入到另外一个表中(这张表我们暂且称为表B)
+
+
+
+
+
+<!--减优惠券库存的SQL-->
+<update id='reduceStock'>
+     update coupon set stock = stock - 1 where id = #{coupon_id}
+</update>
+上面的代码按照我们的逻辑是没有问题，我通过使用PostMan软件测试也是没有问题，但是上面的代码确实是有问题的。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://anzar0903.github.io/ANzas.github.io/post/you-hui-quan-xi-tong.html">
+<meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
+<title>优惠券系统</title>
+
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">优惠券系统</h1>
+<div class="title-right">
+    <a href="https://anzar0903.github.io/ANzas.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/anzar0903/ANzas.github.io/issues/1" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><p>问题抛出<br>
+在近期的项目里面有一个功能是领取优惠券的功能，</p>
+<p>问题描述：</p>
+<p>每一个优惠券一共发行多少张，每个用户可以领取多少张：</p>
+<p>如：A优惠券一共发行120张，每一个用户可以领取140张，当一个用户领取优惠券成功的时候，把领取的记录写入到另外一个表中(这张表我们暂且称为表B)</p>
+
+
+     update coupon set stock = stock - 1 where id = #{coupon_id}
+
+上面的代码按照我们的逻辑是没有问题，我通过使用PostMan软件测试也是没有问题，但是上面的代码确实是有问题的。
+<p>往往我们写的一些业务功能，在低并发的时候很多的问题会体现不出来。所以这个领取优惠券的功能我通过Jmeter软件来进行压测。</p>
+<p>这里配置了一下，大概会发送500次请求，那来验证下优惠券会不会出现超发的问题</p>
+<p>执行结果，里面没有出现异常什么的，样本为500。包括在汇总报告里面也出现了一些返回信息是优惠券不足的信息，那来看下数据库里面的优惠券的总发行数量有没有变成负数呢？也就是有没有超发。</p>
+<p>在测试的时候是测试的id为19的这条数据，测试完之后这里的总发行数量(stock)居然变成了-1(也就是超发了一张)。</p>
+<p>问题引发<br>
+在解决这个问题之前，先来看下这个问题是如何引发出来的。</p>
+<p>上面这张图是整个领取优惠券的流程(上图并没有使用流程图来画，我觉的这样画可能表达更清楚一些)，在蓝色的框那里就是出现超扣减库存的时候。为啥这样说呢？</p>
+<p>如果同时来了两个线程(你可以理解成是两个请求)，比如先来的那个请求通过了检查(线程A)，这时线程A还没有扣减库存，这时线程B经过一翻操作也通过了这个检查优惠券是否可领取的方法，然后线程A和线程B依次扣减库存或者是同时扣减库存，这样就会出现优惠券超领的情况。</p>
+<p>清楚了问题引发的原因，那就来看看如何解决它们。</p>
+<p>推荐一个开源免费的 Spring Boot 最全教程：</p>
+<p><a href="https://github.com/javastacks/spring-boot-best-practice">https://github.com/javastacks/spring-boot-best-practice</a></p>
+<p>解决方案一(Java代码加锁)<br>
+在引起超发原因的那张图内可以看出，导致这一问题的根本原因是多个线程同时访问这个领取优惠券的方法，那只要保证在同一段只有一个线程进入到这个方法就可以了。</p>
+<p>上面贴的代码就可以改成下面这样：</p>
+<p>synchronized (this){<br>
+LoginUser loginUser = LoginInterceptor.threadLocal.get();<br>
+CouponDO couponDO = couponMapper.selectOne(new QueryWrapper()<br>
+.eq("id", couponId)<br>
+.eq("category", categoryEnum.name()));<br>
+if(couponDO == null){<br>
+throw new BizException(BizCodeEnum.COUPON_NO_EXITS);<br>
+}<br>
+this.checkCoupon(couponDO,loginUser.getId());</p>
+<pre class="notranslate"><code class="notranslate">//构建领券记录
+CouponRecordDO couponRecordDO = new CouponRecordDO();
+BeanUtils.copyProperties(couponDO,couponRecordDO);
+couponRecordDO.setCreateTime(new Date());
+couponRecordDO.setUseState(CouponStateEnum.NEW.name());
+couponRecordDO.setUserId(loginUser.getId());
+couponRecordDO.setUserName(loginUser.getName());
+couponRecordDO.setCouponId(couponDO.getId());
+couponRecordDO.setId(null);
+
+int row = couponMapper.reduceStock(couponId);
+if(row == 1){
+    couponRecordMapper.insert(couponRecordDO);
+}else{
+    log.info("发送优惠券失败:{},用户:{}",couponDO,loginUser);
+}
+</code></pre>
+<p>}</p>
+<p>这样，经过Jmeter的压测优惠券并没有出现超发的情况。</p>
+<p>虽然这样可以解决超发的问题，但是在项目中我们不可以这样写，原因如下：</p>
+<p>synchronized的作用范围是单个JVM实例，如果是集群部署系统这里的加锁你可以理解成失效<br>
+在使用了synchronized加锁后，就会形成串行等待的问题，当一个线程A在领取优惠券方法内执行过久时，其它线程会等待直到线程A执行结束<br>
+解决方案二(Sql层面解决超发)<br>
+<br>
+update coupon set stock = stock - 1 where id = #{coupon_id} and stock &gt; 0<br>
+<br>
+Mysql默认使用的是InnoDB引擎，使用InnoDB时在修改某一个记录的时候会将这条记录上锁，所以这个修改数据时不会出现多个线程同时修改数据。这样也可以避免优惠券超发。</p>
+<p>如果在业务中只要有库存就可以发放优惠券的可以使用上面这种方式。</p>
+<p>还有一种Sql的方式，可以将stock自身做为乐观锁。</p>
+
+     update product set stock=stock-1 where stock=#{上一次的库存}  and id = 1 and stock&gt;0
+
+上面这种方式会存在ABA的问题，当然如果业务不在意ABA问题可以使用上面的sql，不过性能可能差一点，如果stock不匹配，这条sql也就失效了。
+<p>如果业务在意ABA问题的话也可以在表中加一个version的字段，每次修改数据的时候这个字段会加1，这样就可以避免ABA问题</p>
+
+     update product set stock=stock-1,versioin = version+1 where  id = 1 and stock&gt;0 and version=#{上一次的版本号}
+
+上面的这三条Sql层面的代码都可以解决优惠券超发的问题，具体使用那种就根据业务来选择了
+<p>解决方案三(通过Redis分布式锁来解决问题)<br>
+引入Redis后，当领取优惠券时会先去Redis里面去获取锁，当锁获取成功后才可以对数据库进行操作</p>
+<p>在分布式锁中我们应该考滤如下：</p>
+<p>排他性，在分布式集群中，同一个方法，在同一个时间只能被某一台机器上的一个线程执行<br>
+容错性，当一个线程上锁后，如果机器突然的宕机，如果不释放锁，此时这条数据将会被锁死<br>
+还要注意锁的粒度，锁的开销<br>
+满足高可用，高性能，可重入<br>
+我们可以使用Redis里面的setnx命令来设置锁，因为setnx是原子性的操作不可被打断</p>
+<p>当这个命令执行成功的时候会返回1，执行失败会返回0,我们就可以通过这个特性来判断是否获取到了锁。</p>
+<p>先看下伪代码：</p>
+<p>String key = "lock:coupon:" + couponId;<br>
+try{<br>
+if(setnx(key,"1")){<br>
+//获取到锁<br>
+//设置Key的时期时间<br>
+exp(key,30,TimeUnit.MILLISECONDS);<br>
+try{<br>
+//业务逻辑<br>
+}finally{<br>
+del(key);<br>
+}<br>
+}else{<br>
+//获取锁失败，递归调用这个方法，或者使用for进行自旋获取锁<br>
+}<br>
+}<br>
+这方法里面设置key的过期时间的原因是，当机器突然的宕机后，即使没有释放掉锁，他也会在一段时间后将这个锁释放，避免导致死锁。</p>
+<p>虽然看上面的代码是没有问题的，但是它是存在一个误删除key的问题</p>
+<p>为了避免这个问题，可以将setnx命令设置的那个值，设置成当前线程的ID,在删除的时候判断这个线程ID是不是与当前线程的Id相同就可以了。</p>
+<p>String key = "lock:coupon:" + couponId;<br>
+String threadId = Thread.currentThread().getId();<br>
+try{<br>
+if(setnx(key,threadId)){<br>
+//获取到锁<br>
+//设置Key的时期时间<br>
+exp(key,30,TimeUnit.MILLISECONDS);<br>
+try{<br>
+//业务逻辑<br>
+}finally{<br>
+if(get(key) == threadId){<br>
+del(key);<br>
+}<br>
+}<br>
+}else{<br>
+//获取锁失败，递归调用这个方法，或者使用for进行自旋获取锁<br>
+}<br>
+}<br>
+通过上面这种方法就可以解决误删除key的问题。</p>
+<p>在finally中的这个判断和删除key的代码不是原子性的，我们可以通过lua脚本的方式来实现它们之间的原子性，将删除key的代码修改成如下：</p>
+<p>String script = "if redis.call('get',KEYS[1]) == ARGV[1] then return redis.call('del',KEYS[1]) else return 0 end";</p>
+<p>redisTemplate.execute(new DefaultRedisScript&lt;&gt;(script, Integer.class), Arrays.asList(key), threadId);<br>
+这里的threadId其实也可以不用，写成uuid也可以，但是在上面setnx的时候，那个值也要写成uuid</p>
+<p>但是这样还要存在一个锁自动续期的问题，你可以开一个守护线程，每隔多久给他续期一次，或者是直接将这个过期时间延长一些。</p>
+<p>在Redis中也有一些官方推荐的分布式锁的方式。我最后是使用的这种方式</p>
+<p>解决方案四(使用Redis推荐的方式)<br>
+官网地址：</p>
+<p><a href="https://redis.io/docs/manual/patterns/distributed-locks/" rel="nofollow">https://redis.io/docs/manual/patterns/distributed-locks/</a></p>
+<p>这个有多种实现方式，比如：Golang,Java,Php</p>
+<p>引入Redisson包</p>
+
+   org.redisson
+   redisson
+   3.17.4
+
+配置RedissoneClient
+<p><a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/configuration/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/configuration">@configuration</a><br>
+public class AppConfig {</p>
+<pre class="notranslate"><code class="notranslate">@Value("${spring.redis.host}")
+private String redisHost;
+
+@Value("${spring.redis.port}")
+private String redisPort;
+
+@Bean
+public RedissonClient redisson(){
+    Config config = new Config();
+    config.useSingleServer().setAddress("redis://" + redisHost + ":" + redisPort);
+    return Redisson.create(config);
+}
+</code></pre>
+<p>}<br>
+配置好RedissonClient后，通过getLock方法获取到锁对象后，在我们的Service层中就可以通过lock和unlock来进行加锁和释放锁了，这样还是很方便的。</p>
+<p>public JsonData addCoupon(long couponId, CouponCategoryEnum categoryEnum) {<br>
+String key = "lock:coupon:" + couponId;<br>
+RLock rLock = redisson.getLock(key);<br>
+LoginUser loginUser = LoginInterceptor.threadLocal.get();<br>
+rLock.lock();<br>
+try{<br>
+//业务逻辑<br>
+}finally {<br>
+rLock.unlock();<br>
+}<br>
+return JsonData.buildSuccess();<br>
+}<br>
+通过这种方法也可以解决优惠券超发的问题 ，这也是Rediss官网推荐的一种方式。</p>
+<p>使用这种方式也无需关心key过期时间续期的问题，因为在Redisson一旦加锁成功，就会启动一个watch dog，你可以将它理解成一个守护线程，它默认会每隔30秒检查一下，如果当前客户端还占有这把锁，它会自动对这个锁的过期时间进行延长。</p>
+<p>也可以通过下面的方法设置watch dog的检测时间间隔</p>
+<p>Config config = new Config();<br>
+config.setLockWatchdogTimeout();<br>
+如上就是我在解决优惠券超发时的一个思路。</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://anzar0903.github.io/ANzas.github.io">Blog Title</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","anzar0903/ANzas.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+</script>
+
+
+</html>
